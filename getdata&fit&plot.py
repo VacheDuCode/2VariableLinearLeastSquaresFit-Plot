@@ -14,8 +14,10 @@ plt.rcParams["font.family"] = "Times New Roman"
 #doesn't create new xlxs file
 #workbook = xlsxwriter.Workbook("PI-LAB2025.xlxs")
 
-workbook = openpyxl.load_workbook('THINLENSES-LAB2025.xlsx')
-worksheet = workbook["Sheet3"]
+workbook = openpyxl.load_workbook('sampledata.xlsx')
+
+#there is some bug when trying to use Sheet 2 for y=ax, P=0...
+worksheet = workbook["Sheet1"]
 x_parameter = worksheet['A1'].value
 y_parameter = worksheet["B1"].value
 delta_x_parameter = worksheet["C1"].value
@@ -103,6 +105,58 @@ def calculate_parameters_Aoverxplusb(p: float) -> None:
     # print(f"{delta_y_values=}, {delta_x_values=}, {A=}, {delta_A=}, \n {chi_squared=}, {reduced_chi_squared=}")
 def calculate_parameters_Aexp_bxplusc_plusD(p: float) -> None:
     pass
+  
+def calculate_parameters_yax(p: float) -> None:
+    print("FITTING y = ax:")
+    global b
+    b = 0
+    global number_of_parameters
+    number_of_parameters = 1
+    global degrees_of_freedom
+    degrees_of_freedom = len(x_values) - number_of_parameters
+
+    global modified_delta_y_values
+    global intial_a_yax
+    global final_a_yax
+    global delta_a_yax
+    global chi_squared
+    global reduced_chi_squared 
+
+    if p!=0:
+        #Manually try better delta_y_values to get reduced_chi_squared between 0-1 (depending of degrees of freedom)
+        for i in range(len(modified_delta_y_values)):
+            modified_delta_y_values[i] = 0.01
+        print(f"\ndelta_y_values have been revised (new delta_y's={modified_delta_y_values[0]})...\n")
+        print(modified_delta_y_values)
+
+        print(f"REFITTING y=ax for {p=}...")
+        final_a_yax = round(sigma_sum(0, len(x_values)-1, lambda i: (x_values[i]*y_values[i])/(modified_delta_y_values[i]**2)) / sigma_sum(0, len(x_values)-1, lambda i: (x_values[i]/modified_delta_y_values[i])**2), 6)
+        delta_a_yax = round(1/math.sqrt(sigma_sum(0, len(x_values)-1, lambda i: (x_values[i]/modified_delta_y_values[i])**2)), 7)
+
+        chi_squared = sigma_sum(0, len(x_values)-1, lambda i: ((1/(modified_delta_y_values[i]))*((y_values[i] - final_a_yax * x_values[i] - b)))**2)
+        reduced_chi_squared = chi_squared / degrees_of_freedom
+        print(f"\nRecalculated delta y's, a, b, delta a, delta, b, chi sqaured, reduced chi-squared:")
+        print(f"{p=}, {modified_delta_y_values=}, \n {final_a_yax=}, {b=}, {delta_a_yax=}, \n {chi_squared=}, {reduced_chi_squared=}")
+   
+    else:
+        initial_a_yax = round(sigma_sum(0, len(x_values)-1, lambda i: (x_values[i]*y_values[i])/(delta_y_values[i]**2)) / sigma_sum(0, len(x_values)-1, lambda i: (x_values[i]/delta_y_values[i])**2), 6)
+        delta_a_yax = round(1/math.sqrt(sigma_sum(0, len(x_values)-1, lambda i: (x_values[i]/delta_y_values[i])**2)), 7)
+        chi_squared = sigma_sum(0, len(x_values)-1, lambda i: ((1/(delta_y_values[i]))*((y_values[i] - initial_a_yax * x_values[i] - b)))**2)
+        reduced_chi_squared = chi_squared / degrees_of_freedom
+
+        for i in range(len(delta_y_values)):
+            modified_delta_y_values.append(math.sqrt((delta_y_values[i])**2 + (initial_a_yax*delta_x_values[i])**2))
+            modified_delta_y_values[i] = round(modified_delta_y_values[i], 6)
+
+        final_a_yax = round(sigma_sum(0, len(x_values)-1, lambda i: (x_values[i]*y_values[i])/(modified_delta_y_values[i]**2)) / sigma_sum(0, len(x_values)-1, lambda i: (x_values[i]/modified_delta_y_values[i])**2), 6)
+        delta_a_yax = round(1/math.sqrt(sigma_sum(0, len(x_values)-1, lambda i: (x_values[i]/modified_delta_y_values[i])**2)), 7)
+
+        chi_squared = sigma_sum(0, len(x_values)-1, lambda i: ((1/(modified_delta_y_values[i]))*((y_values[i] - final_a_yax * x_values[i] - b)))**2)
+        reduced_chi_squared = chi_squared / degrees_of_freedom
+
+        #DEBUG
+        print(f"{initial_a_yax=}, {final_a_yax}, {delta_a_yax=}, {chi_squared=}, \n {reduced_chi_squared=},  {delta_y_parameter} :: {delta_y_values=}, \n {delta_x_parameter} :: {delta_x_values=}")
+        print(f"{x_parameter} :: {x_values=}, {y_parameter} :: {y_values=},\n{modified_delta_y_values=}, \n{degrees_of_freedom=}, {final_a_yax=}, {delta_a_yax=}, \n {chi_squared=}, {reduced_chi_squared=}")
 
 def calculate_parameters_yaxplusb(p: float) -> None:
     #y=ax+b
@@ -178,59 +232,6 @@ def calculate_parameters_yaxplusb(p: float) -> None:
 
         # WRITOUT FINAL
         print(f"{modified_delta_y_values=}, \n {final_a_yaxplusb=}, {b=}, {delta_a_yaxplusb=}, {delta_b=}, \n {chi_squared=}, {reduced_chi_squared=}")
-  
-def calculate_parameters_yax(p: float) -> None:
-    print("FITTING y = ax:")
-    global b
-    b = 0
-    global number_of_parameters
-    number_of_parameters = 1
-    global degrees_of_freedom
-    degrees_of_freedom = len(x_values) - number_of_parameters
-
-    global modified_delta_y_values
-    global intial_a_yax
-    global final_a_yax
-    global delta_a_yax
-    global chi_squared
-    global reduced_chi_squared 
-
-    if p!=0:
-        #Manually try better delta_y_values to get reduced_chi_squared between 0-1 (depending of degrees of freedom)
-        for i in range(len(modified_delta_y_values)):
-            modified_delta_y_values[i] = 0.05
-        print(f"\ndelta_y_values have been revised (new delta_y's={modified_delta_y_values[0]})...\n")
-        print(modified_delta_y_values)
-
-        print(f"REFITTING y=ax for {p=}...")
-        final_a_yax = round(sigma_sum(0, len(x_values)-1, lambda i: (x_values[i]*y_values[i])/(modified_delta_y_values[i]**2)) / sigma_sum(0, len(x_values)-1, lambda i: (x_values[i]/modified_delta_y_values[i])**2), 6)
-        delta_a_yax = round(1/math.sqrt(sigma_sum(0, len(x_values)-1, lambda i: (x_values[i]/modified_delta_y_values[i])**2)), 7)
-
-        chi_squared = sigma_sum(0, len(x_values)-1, lambda i: ((1/(modified_delta_y_values[i]))*((y_values[i] - final_a_yax * x_values[i] - b)))**2)
-        reduced_chi_squared = chi_squared / degrees_of_freedom
-        print(f"\nRecalculated delta y's, a, b, delta a, delta, b, chi sqaured, reduced chi-squared:")
-        print(f"{p=}, {modified_delta_y_values=}, \n {final_a_yax=}, {b=}, {delta_a_yax=}, \n {chi_squared=}, {reduced_chi_squared=}")
-   
-    else:
-        initial_a_yax = round(sigma_sum(0, len(x_values)-1, lambda i: (x_values[i]*y_values[i])/(delta_y_values[i]**2)) / sigma_sum(0, len(x_values)-1, lambda i: (x_values[i]/delta_y_values[i])**2), 6)
-        delta_a_yax = round(1/math.sqrt(sigma_sum(0, len(x_values)-1, lambda i: (x_values[i]/delta_y_values[i])**2)), 7)
-        chi_squared = sigma_sum(0, len(x_values)-1, lambda i: ((1/(delta_y_values[i]))*((y_values[i] - initial_a_yax * x_values[i] - b)))**2)
-        reduced_chi_squared = chi_squared / degrees_of_freedom
-
-        for i in range(len(delta_y_values)):
-            modified_delta_y_values.append(math.sqrt((delta_y_values[i])**2 + (initial_a_yax*delta_x_values[i])**2))
-            modified_delta_y_values[i] = round(modified_delta_y_values[i], 6)
-
-        final_a_yax = round(sigma_sum(0, len(x_values)-1, lambda i: (x_values[i]*y_values[i])/(modified_delta_y_values[i]**2)) / sigma_sum(0, len(x_values)-1, lambda i: (x_values[i]/modified_delta_y_values[i])**2), 6)
-        delta_a_yax = round(1/math.sqrt(sigma_sum(0, len(x_values)-1, lambda i: (x_values[i]/modified_delta_y_values[i])**2)), 7)
-
-        chi_squared = sigma_sum(0, len(x_values)-1, lambda i: ((1/(modified_delta_y_values[i]))*((y_values[i] - final_a_yax * x_values[i] - b)))**2)
-        reduced_chi_squared = chi_squared / degrees_of_freedom
-
-        #DEBUG
-        print(f"{initial_a_yax=}, {final_a_yax}, {delta_a_yax=}, {chi_squared=}, \n {reduced_chi_squared=},  {delta_y_parameter} :: {delta_y_values=}, \n {delta_x_parameter} :: {delta_x_values=}")
-        print(f"{x_parameter} :: {x_values=}, {y_parameter} :: {y_values=},\n{modified_delta_y_values=}, \n{degrees_of_freedom=}, {final_a_yax=}, {delta_a_yax=}, \n {chi_squared=}, {reduced_chi_squared=}")
-
 def plot_y_ax(p: float) -> None:
     global modified_delta_y_values
 
