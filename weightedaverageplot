@@ -1,0 +1,48 @@
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Set the global font to Times New Roman
+plt.rcParams["font.family"] = "Times New Roman"
+
+# Data points
+x_values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+y_values = []
+
+# Uncertainties
+delta_y = [0.004, 0.004, 0.004, 0.009, 0.005, 0.003, 0.003, 0.002, 0.003, 0.009]
+# Fit parameters for y = a x + b (final)
+a = 0
+b = 4.5
+
+# Stats from your script
+chi2 = 10521.1
+chi2_red = 1753.5
+dof = 9
+
+# Fit line
+x_line = np.linspace(0, max(x_values) * 1.3, 200)
+y_line = a * x_line + b
+
+# Plot with error bars
+plt.errorbar(
+    x_values, y_values, yerr=delta_y,
+    fmt='o', markersize=4,
+    mfc='none', mec='black',
+    ecolor='black', elinewidth=1.5, capsize=5,
+    label='Data with uncertainties'
+)
+
+# Fit line
+plt.plot(x_line, y_line, color='green', linewidth=2, label=f'Fit: y = {b:.6f}')
+
+# Labels
+plt.xlabel("Object Number")
+plt.ylabel("Pi Value")
+plt.title("Weighted Average of Pi Values Calculated for Each Object")
+
+# Add chi-squared summary box
+
+
+plt.legend()
+plt.grid(True)
+plt.show()
