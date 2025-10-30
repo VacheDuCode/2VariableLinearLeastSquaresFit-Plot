@@ -78,7 +78,7 @@ def get_data():
         if value[0] != None:
             delta_x_values.append(value[0])
 
-def sigma_sum(start, end, expression):
+def sigma_sum(start: int, end: int, expression) -> float:
     return sum(expression(i) for i in range(start, end + 1))
 
 #implement later
