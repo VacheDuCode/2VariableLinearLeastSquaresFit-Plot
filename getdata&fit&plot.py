@@ -239,6 +239,11 @@ def plot_y_ax(p: float) -> None:
     global b
     global chi_squared
     global reduced_chi_squared
+    
+    if (p == 0):
+        plt.figure(1)
+    else:
+        plt.figure(3)
 
     # Fit line
     x_line = np.linspace(min(x_values)-abs(min(x_values))*0.2, max(x_values) * 1.1, 200)
@@ -262,7 +267,7 @@ def plot_y_ax(p: float) -> None:
     plt.ylabel(f"{y_parameter}")
 
     if (p!=0):
-        plt.title(f"Linear Least-Squares Fit of Measurements (y = ax) Ensuring P = {p}")
+        plt.title(f"Linear Least-Squares Fit of Measurements (y = ax) ensuring P = {p}")
     else:
         plt.title(f"Linear Least-Squares Fit of Measurements (y = ax)")
 
@@ -282,7 +287,7 @@ def plot_y_ax(p: float) -> None:
 
     plt.legend()
     plt.grid(True)
-    plt.show()
+    #plt.show()
 
 def plot_y_axplusb(p: float) -> None: 
     global modified_delta_y_values
@@ -291,6 +296,11 @@ def plot_y_axplusb(p: float) -> None:
     global chi_squared
     global reduced_chi_squared
     
+    if (p == 0):
+        plt.figure(2)
+    else:
+        plt.figure(4)
+
     # Fit line
     x_line = np.linspace(min(x_values)-abs(min(x_values))*0.2, max(x_values) * 1.1, 200)
     y_line = final_a_yaxplusb * x_line + b
@@ -312,9 +322,9 @@ def plot_y_axplusb(p: float) -> None:
     plt.ylabel(f"{y_parameter}")
 
     if (p!=0):
-        plt.title(f"Linear Least-Squares Fit of Diverging Lens with Intercept ensuring P={p}")
+        plt.title(f"Linear Least-Squares Fit of Diverging Lens (y=ax+b) ensuring P = {p}")
     else:
-        plt.title("Linear Least-Squares Fit of Diverging Lens with Intercept")
+        plt.title("Linear Least-Squares Fit of Diverging Lens (y=ax+b)")
 
     # Add chi-squared summary box
     textstr = '\n'.join((
@@ -331,7 +341,10 @@ def plot_y_axplusb(p: float) -> None:
 
     plt.legend()
     plt.grid(True)
-    plt.show()        
+    #plt.show()        
+
+def show_plots() -> None:
+    plt.show()
 
 def main() -> None:
     get_data()
@@ -347,6 +360,8 @@ def main() -> None:
 
     calculate_parameters_yaxplusb(0.5)
     plot_y_axplusb(0.5)
+
+    show_plots()
 
     # When implemented: optional:
     # calculate_parameters_Axsquaredplusbxplusc(0)

@@ -6,11 +6,14 @@ import openpyxl
 import matplotlib.pyplot as plt
 import numpy as np
 
-class DataFitterPlotter:
-    # Set the global font to Times New Roman
-    plt.rcParams["font.family"] = "Times New Roman"
+def sigma_sum(start: int, end: int, expression) -> float:
+    return sum(expression(i) for i in range(start, end + 1))
 
+class DataFitterPlotter:
     def __init__(self, workbook: str, worksheet: str) -> None:
+        # Set the global font to Times New Roman
+        plt.rcParams["font.family"] = "Times New Roman"
+
         #Doesn't paste data into spreadsheet, just prints them out
         #doesn't create new xlxs file
         #workbook = xlsxwriter.Workbook("PI-LAB2025.xlxs")
@@ -19,71 +22,68 @@ class DataFitterPlotter:
         #there is some bug when trying to use Sheet 2 for y=ax, P=0...
         self.worksheet = workbook[worksheet]
 
-        self.x_parameter = worksheet['A1'].value
-        self.y_parameter = worksheet["B1"].value
-        self.delta_x_parameter = worksheet["C1"].value
-        self.delta_y_parameter = worksheet["D1"].value
+        self.x_values = []
+        self.y_values = []
+        self.delta_y_values = []
+        self.delta_x_values = []
 
-    def ....
+        self.modified_delta_y_values = []
+
+        self.initial_a_yax = 0
+        self.final_a_yax = 0
+        self.delta_a_yax = 0
+
+        self.initial_a_yaxplusb = 0
+        self.final_a_yaxplusb = 0
+        self.delta_a_yaxplusb = 0
+        self.b = 0
+        self.delta_b = 0
+
+        self.A = 1
+        self.delta_A = 0
+
+        self.number_of_parameters = 1
+        self.degrees_of_freedom = 1
+        self.chi_squared = 0
+        self.reduced_chi_squared = 0
+                
+    def get_data(self) -> None:
+        self.x_parameter = self.worksheet['A1'].value
+        self.y_parameter = self.worksheet["B1"].value
+        self.delta_x_parameter = self.worksheet["C1"].value
+        self.delta_y_parameter = self.worksheet["D1"].value
+
+        for value in self.worksheet.iter_rows(min_row=2,
+                                        min_col=1,
+                                        max_col=1,
+                                        values_only=True):
+            if value[0] != None:  
+                self.x_values.append(value[0])
+
+        for value in self.worksheet.iter_rows(min_row=2,
+                                        min_col=2,
+                                        max_col=2,
+                                        values_only=True):
+            if value[0] != None:
+                self.y_values.append(value[0])
+
+        for value in self.worksheet.iter_rows(min_row=2,
+                                        min_col=4,
+                                        max_col=4,
+                                        values_only=True):
+            if value[0] != None:
+                self.delta_y_values.append(value[0])
+            
+        for value in self.worksheet.iter_rows(min_row=2,
+                        max_row=100,
+                        min_col=3,
+                        max_col=3,
+                        values_only=True):
+            if value[0] != None:
+                self.delta_x_values.append(value[0])
 
 #TOO BE CONTINNUED....????#
 
-
-
-x_values = []
-y_values = []
-delta_y_values = []
-delta_x_values = []
-
-modified_delta_y_values = []
-
-initial_a_yax = 0
-final_a_yax = 0
-delta_a_yax = 0
-
-initial_a_yaxplusb = 0
-final_a_yaxplusb = 0
-delta_a_yaxplusb = 0
-b = 0
-delta_b = 0
-
-A = 1
-delta_A = 0
-
-number_of_parameters = 1
-degrees_of_freedom = 1
-chi_squared = 0
-reduced_chi_squared = 0
-
-# def get_data():
-#     for value in worksheet.iter_rows(min_row=2,
-#                                     min_col=1,
-#                                     max_col=1,
-#                                     values_only=True):
-#         if value[0] != None:  
-#             x_values.append(value[0])
-
-#     for value in worksheet.iter_rows(min_row=2,
-#                                     min_col=2,
-#                                     max_col=2,
-#                                     values_only=True):
-#         if value[0] != None:
-#             y_values.append(value[0])
-
-#     for value in worksheet.iter_rows(min_row=2,
-#                                     min_col=4,
-#                                     max_col=4,
-#                                     values_only=True):
-#         if value[0] != None:
-#             delta_y_values.append(value[0])
-        
-#     for value in worksheet.iter_rows(min_row=2,
-#                     max_row=100,
-#                     min_col=3,
-#                     max_col=3,
-#                     values_only=True):
-#         if value[0] != None:
-#             delta_x_values.append(value[0])
 
 # def sigma_sum(start: int, end: int, expression) -> float:
 #     return sum(expression(i) for i in range(start, end + 1))
@@ -343,6 +343,17 @@ reduced_chi_squared = 0
 def main() -> None:
 
     data_fitter_plotter = DataFitterPlotter('sampledata.xlsx', 'Sheet1')
+    data_fitter_plotter.get_data()
+
+    data_fitter_plotter.calculate.........
+    data_fitter_plotter
+
+    data_fitter_plotter
+    data_fitter_plotter
+
+    data_fitter_plotter
+    data_fitter_plotter
+
     ...
 
     # get_data()
