@@ -307,31 +307,42 @@ class DataFitterPlotter:
     def show_plots(self) -> None:
         plt.show()
 
-    #implement these later whenever
-    def calculate_parameters_AxsquaredplusBxplusC(self, p: float=0) -> None:
-        pass
-    def calculate_parameters_Aoverxplusb(self, p: float=0) -> None:
-        pass
+    # #implement these later whenever
+    # def calculate_parameters_AxsquaredplusBxplusC(self, p: float=0, manual_delta_y: float=0.1) -> None:
+    #     pass
+    
+    # def plot_AxsquaredplusBxplusC(self, p: float=0) -> None:
+    #     pass
+   
+    # def calculate_parameters_Aoverxplusb(self, p: float=0, manual_delta_y: float=0.1) -> None:
+    #     pass
 
-        # #fit y=A(1/x)
-        # print("FITTING y = (A/x)+b(?):")
-        # number_of_parameters = 2
-        # degrees_of_freedom = len(x_values) - number_of_parameters
+    #     # #fit y=A(1/x)
+    #     # print("FITTING y = (A/x)+b(?):")
+    #     # number_of_parameters = 2
+    #     # degrees_of_freedom = len(x_values) - number_of_parameters
 
-        # global A
-        # global delta_A
-        # A = 
-        # delta_A = 
+    #     # global A
+    #     # global delta_A
+    #     # A = 
+    #     # delta_A = 
         
-        # chi_squared = sigma_sum(0, len(x_values)-1, lambda i: ((1/(delta_y_values[i]))*((y_values[i] - final_a_yaxplusb * x_values[i] - b)))**2)
-        # reduced_chi_squared = chi_squared / degrees_of_freedom
+    #     # chi_squared = sigma_sum(0, len(x_values)-1, lambda i: ((1/(delta_y_values[i]))*((y_values[i] - final_a_yaxplusb * x_values[i] - b)))**2)
+    #     # reduced_chi_squared = chi_squared / degrees_of_freedom
 
-        #Manually try better delta_y_values to get reduced_chi_squared of 0-1 (depending of degrees of freedom)
-        # for i in range(len(delta_y_values)):
-        #     delta_y_values[i] = 1.39
+    #     #Manually try better delta_y_values to get reduced_chi_squared of 0-1 (depending of degrees of freedom)
+    #     # for i in range(len(delta_y_values)):
+    #     #     delta_y_values[i] = 1.39
 
-        # print(f"{delta_y_values=}, {delta_x_values=}, {A=}, {delta_A=}, \n {chi_squared=}, {reduced_chi_squared=}")
-    def calculate_parameters_Aexp_bxplusc_plusD(self, p: float=0) -> None:
+    #     # print(f"{delta_y_values=}, {delta_x_values=}, {A=}, {delta_A=}, \n {chi_squared=}, {reduced_chi_squared=}")
+    
+    # def plot_Aoverxplusb(self, p: float=0) -> None:
+    #     pass
+
+    # def calculate_parameters_Aexp_bxplusc_plusD(self, p: float=0, manual_delta_y: float=0.1) -> None:
+    #     pass
+
+    # def plot_Aexp_bxplusc_plusD(self, p: float=0) -> None:
         pass
 
 def main() -> None:
