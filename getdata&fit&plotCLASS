@@ -337,7 +337,7 @@ class DataFitterPlotter:
 
 def main() -> None:
 
-    data_fitter_plotter = DataFitterPlotter('sampledata.xlsx', 'Sheet2')
+    data_fitter_plotter = DataFitterPlotter('sampledata.xlsx', 'Sheet1')
 
     data_fitter_plotter.calculate_parameters_yax()
     data_fitter_plotter.plot_y_ax()
