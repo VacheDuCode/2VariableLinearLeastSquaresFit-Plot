@@ -80,33 +80,8 @@ def get_data():
 
 def sigma_sum(start: int, end: int, expression) -> float:
     return sum(expression(i) for i in range(start, end + 1))
-
-#implement later
-def calculate_parameters_Aoverxplusb(p: float) -> None:
-    pass
-
-    # #fit y=A(1/x)
-    # print("FITTING y = (A/x)+b(?):")
-    # number_of_parameters = 2
-    # degrees_of_freedom = len(x_values) - number_of_parameters
-
-    # global A
-    # global delta_A
-    # A = 
-    # delta_A = 
-    
-    # chi_squared = sigma_sum(0, len(x_values)-1, lambda i: ((1/(delta_y_values[i]))*((y_values[i] - final_a_yaxplusb * x_values[i] - b)))**2)
-    # reduced_chi_squared = chi_squared / degrees_of_freedom
-
-    #Manually try better delta_y_values to get reduced_chi_squared of 0-1 (depending of degrees of freedom)
-    # for i in range(len(delta_y_values)):
-    #     delta_y_values[i] = 1.39
-
-    # print(f"{delta_y_values=}, {delta_x_values=}, {A=}, {delta_A=}, \n {chi_squared=}, {reduced_chi_squared=}")
-def calculate_parameters_Aexp_bxplusc_plusD(p: float) -> None:
-    pass
   
-def calculate_parameters_yax(p: float) -> None:
+def calculate_parameters_yax(p: float = 0) -> None:
     print("FITTING y = ax:")
     global b
     b = 0
@@ -124,6 +99,7 @@ def calculate_parameters_yax(p: float) -> None:
 
     if p!=0:
         #Manually try better delta_y_values to get reduced_chi_squared between 0-1 (depending of degrees of freedom)
+        #This is only done here in this plot ()
         for i in range(len(modified_delta_y_values)):
             modified_delta_y_values[i] = 0.01
         print(f"\ndelta_y_values have been revised (new delta_y's={modified_delta_y_values[0]})...\n")
@@ -158,7 +134,7 @@ def calculate_parameters_yax(p: float) -> None:
         print(f"{initial_a_yax=}, {final_a_yax}, {delta_a_yax=}, {chi_squared=}, \n {reduced_chi_squared=},  {delta_y_parameter} :: {delta_y_values=}, \n {delta_x_parameter} :: {delta_x_values=}")
         print(f"{x_parameter} :: {x_values=}, {y_parameter} :: {y_values=},\n{modified_delta_y_values=}, \n{degrees_of_freedom=}, {final_a_yax=}, {delta_a_yax=}, \n {chi_squared=}, {reduced_chi_squared=}")
 
-def calculate_parameters_yaxplusb(p: float) -> None:
+def calculate_parameters_yaxplusb(p: float = 0) -> None:
     #y=ax+b
     global number_of_parameters
     number_of_parameters = 2
@@ -232,7 +208,7 @@ def calculate_parameters_yaxplusb(p: float) -> None:
 
         # WRITOUT FINAL
         print(f"{modified_delta_y_values=}, \n {final_a_yaxplusb=}, {b=}, {delta_a_yaxplusb=}, {delta_b=}, \n {chi_squared=}, {reduced_chi_squared=}")
-def plot_y_ax(p: float) -> None:
+def plot_y_ax(p: float = 0) -> None:
     global modified_delta_y_values
 
     global final_a_yax
@@ -289,7 +265,7 @@ def plot_y_ax(p: float) -> None:
     plt.grid(True)
     #plt.show()
 
-def plot_y_axplusb(p: float) -> None: 
+def plot_y_axplusb(p: float = 0) -> None: 
     global modified_delta_y_values
     global final_a_yaxplusb
     global b
@@ -343,23 +319,48 @@ def plot_y_axplusb(p: float) -> None:
     plt.grid(True)
     #plt.show()        
 
+#implement later
+def calculate_parameters_Aoverxplusb(p: float = 0) -> None:
+    pass
+
+    # #fit y=A(1/x)
+    # print("FITTING y = (A/x)+b(?):")
+    # number_of_parameters = 2
+    # degrees_of_freedom = len(x_values) - number_of_parameters
+
+    # global A
+    # global delta_A
+    # A = 
+    # delta_A = 
+    
+    # chi_squared = sigma_sum(0, len(x_values)-1, lambda i: ((1/(delta_y_values[i]))*((y_values[i] - final_a_yaxplusb * x_values[i] - b)))**2)
+    # reduced_chi_squared = chi_squared / degrees_of_freedom
+
+    #Manually try better delta_y_values to get reduced_chi_squared of 0-1 (depending of degrees of freedom)
+    # for i in range(len(delta_y_values)):
+    #     delta_y_values[i] = 1.39
+
+    # print(f"{delta_y_values=}, {delta_x_values=}, {A=}, {delta_A=}, \n {chi_squared=}, {reduced_chi_squared=}")
+def calculate_parameters_Aexp_bxplusc_plusD(p: float = 0) -> None:
+    pass
+
 def show_plots() -> None:
     plt.show()
 
 def main() -> None:
     get_data()
 
-    calculate_parameters_yax(0)
-    plot_y_ax(0)
+    calculate_parameters_yax()
+    plot_y_ax()
 
-    calculate_parameters_yaxplusb(0)
-    plot_y_axplusb(0)
+    calculate_parameters_yaxplusb()
+    plot_y_axplusb()
 
-    calculate_parameters_yax(0.5)
-    plot_y_ax(0.5)
+    calculate_parameters_yax(p = 0.5)
+    plot_y_ax(p = 0.5)
 
-    calculate_parameters_yaxplusb(0.5)
-    plot_y_axplusb(0.5)
+    calculate_parameters_yaxplusb(p = 0.5)
+    plot_y_axplusb(p = 0.5)
 
     show_plots()
 
