@@ -11,7 +11,7 @@ def sigma_sum(start: int, end: int, expression) -> float:
 
 class DataFitterPlotter:
     def __init__(self, workbook: str, worksheet: str, p: float = 0) -> None:
-        # Set the global font to Times New Roman
+        # Set the font to Times New Roman
         plt.rcParams["font.family"] = "Times New Roman"
 
         #Doesn't paste data into spreadsheet, just prints them out
