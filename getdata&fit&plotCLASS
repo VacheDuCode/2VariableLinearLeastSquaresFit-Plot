@@ -10,7 +10,7 @@ def sigma_sum(start: int, end: int, expression) -> float:
     return sum(expression(i) for i in range(start, end + 1))
 
 class DataFitterPlotter:
-    def __init__(self, workbook: str, worksheet: str, p: float = 0) -> None:
+    def __init__(self, workbook: str, worksheet: str) -> None:
         # Set the font to Times New Roman
         plt.rcParams["font.family"] = "Times New Roman"
 
@@ -86,34 +86,6 @@ class DataFitterPlotter:
             if value[0] != None:
                 self.delta_x_values.append(value[0])
             else: break
-
-#TOO BE CONTINNUED....????#
-
-
-    #implement later
-    def calculate_parameters_Aoverxplusb(self, p: float=0) -> None:
-        pass
-
-        # #fit y=A(1/x)
-        # print("FITTING y = (A/x)+b(?):")
-        # number_of_parameters = 2
-        # degrees_of_freedom = len(x_values) - number_of_parameters
-
-        # global A
-        # global delta_A
-        # A = 
-        # delta_A = 
-        
-        # chi_squared = sigma_sum(0, len(x_values)-1, lambda i: ((1/(delta_y_values[i]))*((y_values[i] - final_a_yaxplusb * x_values[i] - b)))**2)
-        # reduced_chi_squared = chi_squared / degrees_of_freedom
-
-        #Manually try better delta_y_values to get reduced_chi_squared of 0-1 (depending of degrees of freedom)
-        # for i in range(len(delta_y_values)):
-        #     delta_y_values[i] = 1.39
-
-        # print(f"{delta_y_values=}, {delta_x_values=}, {A=}, {delta_A=}, \n {chi_squared=}, {reduced_chi_squared=}")
-    def calculate_parameters_Aexp_bxplusc_plusD(self, p: float=0) -> None:
-        pass
   
     def calculate_parameters_yax(self, p: float=0, manual_delta_y: float=0.1) -> None:
         print("FITTING y = ax:")
@@ -335,8 +307,34 @@ class DataFitterPlotter:
     def show_plots(self) -> None:
         plt.show()
 
-def main() -> None:
+    #implement these later whenever
+    def calculate_parameters_AxsquaredplusBxplusC(self, p: float=0) -> None:
+        pass
+    def calculate_parameters_Aoverxplusb(self, p: float=0) -> None:
+        pass
 
+        # #fit y=A(1/x)
+        # print("FITTING y = (A/x)+b(?):")
+        # number_of_parameters = 2
+        # degrees_of_freedom = len(x_values) - number_of_parameters
+
+        # global A
+        # global delta_A
+        # A = 
+        # delta_A = 
+        
+        # chi_squared = sigma_sum(0, len(x_values)-1, lambda i: ((1/(delta_y_values[i]))*((y_values[i] - final_a_yaxplusb * x_values[i] - b)))**2)
+        # reduced_chi_squared = chi_squared / degrees_of_freedom
+
+        #Manually try better delta_y_values to get reduced_chi_squared of 0-1 (depending of degrees of freedom)
+        # for i in range(len(delta_y_values)):
+        #     delta_y_values[i] = 1.39
+
+        # print(f"{delta_y_values=}, {delta_x_values=}, {A=}, {delta_A=}, \n {chi_squared=}, {reduced_chi_squared=}")
+    def calculate_parameters_Aexp_bxplusc_plusD(self, p: float=0) -> None:
+        pass
+
+def main() -> None:
     data_fitter_plotter = DataFitterPlotter('sampledata.xlsx', 'Sheet1')
 
     data_fitter_plotter.calculate_parameters_yax()
