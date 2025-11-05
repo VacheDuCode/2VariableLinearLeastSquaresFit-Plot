@@ -105,8 +105,8 @@ class DataFitterPlotter:
             print(self.modified_delta_y_values)
 
             print(f"REFITTING y=ax for {p=}...")
-            self.final_a_yax = round(sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]*self.y_values[i])/(self.modified_delta_y_values[i]**2)) / sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]/self.modified_delta_y_values[i])**2), 6)
-            self.delta_a_yax = round(1/math.sqrt(sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]/self.modified_delta_y_values[i])**2)), 7)
+            self.final_a_yax =  sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]*self.y_values[i])/(self.modified_delta_y_values[i]**2)) / sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]/self.modified_delta_y_values[i])**2)
+            self.delta_a_yax =  1/math.sqrt(sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]/self.modified_delta_y_values[i])**2))
 
             self.chi_squared = sigma_sum(0, len(self.x_values)-1, lambda i: ((1/(self.modified_delta_y_values[i]))*((self.y_values[i] - self.final_a_yax * self.x_values[i] - self.b)))**2)
             self.reduced_chi_squared = self.chi_squared / self.degrees_of_freedom
@@ -114,20 +114,20 @@ class DataFitterPlotter:
             print(f"{p=}, {self.modified_delta_y_values=}, \n {self.final_a_yax=}, {self.b=}, {self.delta_a_yax=}, \n {self.chi_squared=}, {self.reduced_chi_squared=}")
     
         else:
-            self.initial_a_yax = round(sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]*self.y_values[i])/(self.delta_y_values[i]**2)) / sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]/self.delta_y_values[i])**2), 6)
-            self.delta_a_yax = round(1/math.sqrt(sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]/self.delta_y_values[i])**2)), 7)
+            self.initial_a_yax =  sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]*self.y_values[i])/(self.delta_y_values[i]**2)) / sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]/self.delta_y_values[i])**2)
+            self.delta_a_yax =  1/math.sqrt(sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]/self.delta_y_values[i])**2))
             
             if len(self.modified_delta_y_values)==0:
                 for i in range(len(self.delta_y_values)):
                     self.modified_delta_y_values.append(math.sqrt((self.delta_y_values[i])**2 + (self.initial_a_yax*self.delta_x_values[i])**2))
-                    self.modified_delta_y_values[i] = round(self.modified_delta_y_values[i], 6)
+                    self.modified_delta_y_values[i] =  self.modified_delta_y_values[i]
             else:
                 for i in range(len(self.delta_y_values)):
                     self.modified_delta_y_values[i] = math.sqrt((self.delta_y_values[i])**2 + (self.initial_a_yax*self.delta_x_values[i])**2)
-                    self.modified_delta_y_values[i] = round(self.modified_delta_y_values[i], 6)
+                    self.modified_delta_y_values[i] =  self.modified_delta_y_values[i]
 
-            self.final_a_yax = round(sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]*self.y_values[i])/(self.modified_delta_y_values[i]**2)) / sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]/self.modified_delta_y_values[i])**2), 6)
-            self.delta_a_yax = round(1/math.sqrt(sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]/self.modified_delta_y_values[i])**2)), 7)
+            self.final_a_yax =  sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]*self.y_values[i])/(self.modified_delta_y_values[i]**2)) / sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]/self.modified_delta_y_values[i])**2)
+            self.delta_a_yax =  1/math.sqrt(sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]/self.modified_delta_y_values[i])**2))
 
             self.chi_squared = sigma_sum(0, len(self.x_values)-1, lambda i: ((1/(self.modified_delta_y_values[i]))*((self.y_values[i] - self.final_a_yax * self.x_values[i] - self.b)))**2)
             self.reduced_chi_squared = self.chi_squared / self.degrees_of_freedom
@@ -186,11 +186,10 @@ class DataFitterPlotter:
             if len(self.modified_delta_y_values)==0:
                 for i in range(len(self.delta_y_values)):
                     self.modified_delta_y_values.append(math.sqrt((self.delta_y_values[i])**2 + (self.initial_a_yaxplusb*self.delta_x_values[i])**2))
-                    self.modified_delta_y_values[i] = round(self.modified_delta_y_values[i], 6)
-            else:
+                    self.modified_delta_y_values[i] =  self.modified_delta_y_values[i]
                 for i in range(len(self.delta_y_values)):
                     self.modified_delta_y_values[i] = math.sqrt((self.delta_y_values[i])**2 + (self.initial_a_yaxplusb*self.delta_x_values[i])**2)
-                    self.modified_delta_y_values[i] = round(self.modified_delta_y_values[i], 6)
+                    self.modified_delta_y_values[i] =  self.modified_delta_y_values[i]
 
             print("\n\n FITTING y = ax + b (final):\n")
 
@@ -363,11 +362,11 @@ class DataFitterPlotter:
             if len(self.modified_delta_y_values)==0:
                 for i in range(len(self.delta_y_values)):
                     self.modified_delta_y_values.append(math.sqrt((self.delta_y_values[i])**2 + (self.initial_a_yaxplusb*self.delta_x_values[i])**2))
-                    self.modified_delta_y_values[i] = round(self.modified_delta_y_values[i], 6)
+                    self.modified_delta_y_values[i] =  self.modified_delta_y_values[i], 6)
             else:
                 for i in range(len(self.delta_y_values)):
                     self.modified_delta_y_values[i] = math.sqrt((self.delta_y_values[i])**2 + (self.initial_a_yaxplusb*self.delta_x_values[i])**2)
-                    self.modified_delta_y_values[i] = round(self.modified_delta_y_values[i], 6)
+                    self.modified_delta_y_values[i] =  self.modified_delta_y_values[i], 6)
 
             print("\n\n FITTING y = ax + b (final):\n")
 
