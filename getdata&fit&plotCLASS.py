@@ -256,8 +256,10 @@ class DataFitterPlotter:
             bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.7)
         )
 
+        plt.axvline(x=0, linestyle='-', linewidth=1.2)
+        plt.axhline(y=0, linestyle='-', linewidth=1.2)
         plt.legend()
-        plt.grid(True)
+        plt.grid(True, linestyle='--', alpha=0.7)
         #plt.show()
 
     def plot_y_axplusb(self, p: float=0) -> None: 
@@ -283,7 +285,7 @@ class DataFitterPlotter:
         )
 
         # Fit line
-        plt.plot(x_line, y_line, color='green', linewidth=2, label=f'Fit: y = {self.final_a_yaxplusb:.2f}x + {self.b:.2f}')
+        plt.plot(x_line, y_line, color='green', linewidth=2, label=f'Fit: y = {self.final_a_yaxplusb:.4f}x + {self.b:.4f}')
 
         # Labels
         plt.xlabel(f"{self.x_parameter}")
@@ -307,8 +309,10 @@ class DataFitterPlotter:
             bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.7)
         )
 
+        plt.axvline(x=0, linestyle='-', linewidth=1.2)
+        plt.axhline(y=0, linestyle='-', linewidth=1.2)
         plt.legend()
-        plt.grid(True)
+        plt.grid(True, linestyle='--', alpha=0.7)
         #plt.show()        
 
 #DO AS SOON AS POSSIBLE!!!!
