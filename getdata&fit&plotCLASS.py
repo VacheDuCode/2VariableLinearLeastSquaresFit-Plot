@@ -88,6 +88,9 @@ class DataFitterPlotter:
             else: break
   
     def calculate_parameters_yax(self, p: float=0, manual_delta_y: float=0.1) -> None:
+        float(p)
+        float(manual_delta_y)
+        
         print("FITTING y = ax:")
         self.b = 0
         self.number_of_parameters = 1
@@ -134,6 +137,9 @@ class DataFitterPlotter:
             print(f"{self.x_parameter} :: {self.x_values=}, {self.y_parameter} :: {self.y_values=},\n{self.modified_delta_y_values=}, \n{self.degrees_of_freedom=}, {self.final_a_yax=}, {self.delta_a_yax=}, \n {self.chi_squared=}, {self.reduced_chi_squared=}")
 
     def calculate_parameters_yaxplusb(self, p: float=0, manual_delta_y: float=0.1) -> None:
+        float(p)
+        float(manual_delta_y)
+        
         #y=ax+b
         self.number_of_parameters = 2
         self.degrees_of_freedom = len(self.x_values) - self.number_of_parameters
@@ -204,6 +210,7 @@ class DataFitterPlotter:
         print(f"{self.modified_delta_y_values=}, \n {self.final_a_yaxplusb=}, {self.b=}, {self.delta_a_yaxplusb=}, {self.delta_b=}, \n {self.chi_squared=}, {self.reduced_chi_squared=}")
 
     def plot_y_ax(self, p: float=0) -> None:
+        float(p)
 
         if (p == 0):
             plt.figure(1)
@@ -255,7 +262,133 @@ class DataFitterPlotter:
         #plt.show()
 
     def plot_y_axplusb(self, p: float=0) -> None: 
+        float(p)
+
+        if (p == 0):
+            plt.figure(2)
+        else:
+            plt.figure(4)
+
+        # Fit line
+        x_line = np.linspace(min(self.x_values)-abs(min(self.x_values))*0.2, max(self.x_values) * 1.1, 200)
+        y_line = self.final_a_yaxplusb * x_line + self.b
+
+        # Plot with error bars
+        plt.errorbar(
+            self.x_values, self.y_values, 
+            yerr=self.modified_delta_y_values,
+            fmt='o', markersize=4,
+            mfc='none', mec='black',
+            ecolor='black', elinewidth=1.5, capsize=2,
+            label='Data with uncertainties'
+        )
+
+        # Fit line
+        plt.plot(x_line, y_line, color='green', linewidth=2, label=f'Fit: y = {self.final_a_yaxplusb:.2f}x + {self.b:.2f}')
+
+        # Labels
+        plt.xlabel(f"{self.x_parameter}")
+        plt.ylabel(f"{self.y_parameter}")
+
+        if (p!=0):
+            plt.title(f"Linear Least-Squares Fit of Diverging Lens (y=ax+b) ensuring P = {p}")
+        else:
+            plt.title("Linear Least-Squares Fit of Diverging Lens (y=ax+b)")
+
+        # Add chi-squared summary box
+        textstr = '\n'.join((
+            r'$\chi^2 = %.3f$' % (self.chi_squared,),
+            r'$\chi^2_\nu = %.4f$' % (self.reduced_chi_squared,),
+        ))
+        plt.gca().text(
+            0.05, 0.50, textstr,
+            transform=plt.gca().transAxes,
+            fontsize=10,
+            verticalalignment='top',
+            bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.7)
+        )
+
+        plt.legend()
+        plt.grid(True)
+        #plt.show()        
+
+#DO AS SOON AS POSSIBLE!!!!
+    def calculate_parameters_yaxSQUAREDplusb(self, p: float=0, manual_delta_y: float=0.1) -> None:
+        float(p)
+        float(manual_delta_y)
         
+        #y=ax+b
+        self.number_of_parameters = 2
+        self.degrees_of_freedom = len(self.x_values) - self.number_of_parameters
+
+        if p!=0:
+            #Manually try better delta_y_values to get reduced_chi_squared between 0-1 (depending of degrees of freedom)
+            for i in range(len(self.modified_delta_y_values)):
+                #make manual entered number
+                self.modified_delta_y_values[i] = manual_delta_y
+            print(f"REFITTING y=ax+b for {p=}...")
+            self.triangle = sigma_sum(0, len(self.x_values)-1, lambda i: (1/self.modified_delta_y_values[i])**2)*sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]/self.modified_delta_y_values[i])**2) - (sigma_sum(0, len(self.x_values)-1, lambda i: self.x_values[i]/(self.modified_delta_y_values[i]**2)))**2
+            self.final_a_yaxplusb = (1/self.triangle)*(sigma_sum(0, len(self.x_values)-1, lambda i: 1/(self.modified_delta_y_values[i]**2))*sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]*self.y_values[i])/(self.modified_delta_y_values[i]**2)) - sigma_sum(0, len(self.x_values)-1, lambda i: self.y_values[i]/(self.modified_delta_y_values[i]**2))*sigma_sum(0, len(self.x_values)-1, lambda i: self.x_values[i]/(self.modified_delta_y_values[i]**2)))
+
+            self.b = (1/self.triangle)*((sigma_sum(0,len(self.x_values)-1, lambda i: self.y_values[i]/(self.modified_delta_y_values[i]**2))*sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]/self.modified_delta_y_values[i])**2)) - (sigma_sum(0, len(self.x_values)-1, lambda i: self.x_values[i]/(self.modified_delta_y_values[i]**2))*sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]*self.y_values[i])/(self.modified_delta_y_values[i]**2))))
+            self.delta_a_yaxplusb = math.sqrt((1/self.triangle)*sigma_sum(0, len(self.x_values)-1, lambda i: (1/(self.modified_delta_y_values[i]**2))))
+            self.delta_b = math.sqrt((1/self.triangle)*sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]/self.modified_delta_y_values[i])**2))
+
+            self.chi_squared = sigma_sum(0, len(self.x_values)-1, lambda i: ((1/(self.modified_delta_y_values[i]))*((self.y_values[i] - self.final_a_yaxplusb * self.x_values[i] -self.b)))**2)
+            self.reduced_chi_squared = self.chi_squared / self.degrees_of_freedom
+            print(f"\nRecalculated delta y's, a, b, delta a, delta, b, chi sqaured, reduced chi-squared:")
+            print(f"{p=}, {self.modified_delta_y_values=}, \n {self.final_a_yaxplusb=}, {self.b=}, {self.delta_a_yaxplusb=}, {self.delta_b=}, \n {self.chi_squared=}, {self.reduced_chi_squared=}")
+
+        else:
+            print("\n\n FITTING y = ax + b (initial):\n")
+            self.triangle = sigma_sum(0, len(self.x_values)-1, lambda i: (1/self.delta_y_values[i])**2)*sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]/self.delta_y_values[i])**2) - (sigma_sum(0, len(self.x_values)-1, lambda i: self.x_values[i]/(self.delta_y_values[i]**2)))**2
+            self.t1 = sigma_sum(0, len(self.x_values)-1, lambda i: (1/self.delta_y_values[i])**2)*sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]/self.delta_y_values[i])**2)
+            self.t2 = (sigma_sum(0, len(self.x_values)-1, lambda i: self.x_values[i]/(self.delta_y_values[i]**2)))**2
+            
+            print(f"{self.t1=}, {self.t2=}, {self.triangle=}, {len(self.x_values)}, {self.number_of_parameters=}, {self.degrees_of_freedom=}")
+
+            self.initial_a_yaxplusb = (1/self.triangle)*(sigma_sum(0, len(self.x_values)-1, lambda i: 1/(self.delta_y_values[i]**2))*sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]*self.y_values[i])/(self.delta_y_values[i]**2)) - sigma_sum(0, len(self.x_values)-1, lambda i: self.y_values[i]/(self.delta_y_values[i]**2))*sigma_sum(0, len(self.x_values)-1, lambda i: self.x_values[i]/(self.delta_y_values[i]**2)))
+            self.b = (1/self.triangle)*((sigma_sum(0,len(self.x_values)-1, lambda i: self.y_values[i]/(self.delta_y_values[i]**2))*sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]/self.delta_y_values[i])**2)) - (sigma_sum(0, len(self.x_values)-1, lambda i: self.x_values[i]/(self.delta_y_values[i]**2))*sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]*self.y_values[i])/(self.delta_y_values[i]**2))))
+            self.delta_a_yaxplusb = math.sqrt((1/self.triangle)*sigma_sum(0, len(self.x_values)-1, lambda i: (1/(self.delta_y_values[i]**2))))
+            self.delta_b = math.sqrt((1/self.triangle)*sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]/self.delta_y_values[i])**2))
+
+            self.chi_squared = sigma_sum(0, len(self.x_values)-1, lambda i: ((1/(self.delta_y_values[i]))*((self.y_values[i] - self.initial_a_yaxplusb * self.x_values[i] - self.b)))**2)
+            self.reduced_chi_squared = self.chi_squared / self.degrees_of_freedom
+            
+            # WRUTOUT INIT
+            print(f"{self.x_values=}, {self.y_values=}, {self.initial_a_yaxplusb=}, \n {self.b=}, \n {self.delta_a_yaxplusb=}, {self.delta_b=}")
+            print(f"{self.delta_y_values=}, {self.modified_delta_y_values=}, {self.degrees_of_freedom=}, {self.chi_squared=}, {self.reduced_chi_squared=}")
+
+            #final - new deltas, new a, new b
+            if len(self.modified_delta_y_values)==0:
+                for i in range(len(self.delta_y_values)):
+                    self.modified_delta_y_values.append(math.sqrt((self.delta_y_values[i])**2 + (self.initial_a_yaxplusb*self.delta_x_values[i])**2))
+                    self.modified_delta_y_values[i] = round(self.modified_delta_y_values[i], 6)
+            else:
+                for i in range(len(self.delta_y_values)):
+                    self.modified_delta_y_values[i] = math.sqrt((self.delta_y_values[i])**2 + (self.initial_a_yaxplusb*self.delta_x_values[i])**2)
+                    self.modified_delta_y_values[i] = round(self.modified_delta_y_values[i], 6)
+
+            print("\n\n FITTING y = ax + b (final):\n")
+
+            self.triangle = sigma_sum(0, len(self.x_values)-1, lambda i: (1/self.modified_delta_y_values[i])**2)*sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]/self.modified_delta_y_values[i])**2) - (sigma_sum(0, len(self.x_values)-1, lambda i: self.x_values[i]/(self.modified_delta_y_values[i]**2)))**2
+            self.final_a_yaxplusb = (1/self.triangle)*(sigma_sum(0, len(self.x_values)-1, lambda i: 1/(self.modified_delta_y_values[i]**2))*sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]*self.y_values[i])/(self.modified_delta_y_values[i]**2)) - sigma_sum(0, len(self.x_values)-1, lambda i: self.y_values[i]/(self.modified_delta_y_values[i]**2))*sigma_sum(0, len(self.x_values)-1, lambda i: self.x_values[i]/(self.modified_delta_y_values[i]**2)))
+            
+            self.b = (1/self.triangle)*((sigma_sum(0,len(self.x_values)-1, lambda i: self.y_values[i]/(self.modified_delta_y_values[i]**2))*sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]/self.modified_delta_y_values[i])**2)) - (sigma_sum(0, len(self.x_values)-1, lambda i: self.x_values[i]/(self.modified_delta_y_values[i]**2))*sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]*self.y_values[i])/(self.modified_delta_y_values[i]**2))))
+            self.delta_a_yaxplusb = math.sqrt((1/self.triangle)*sigma_sum(0, len(self.x_values)-1, lambda i: (1/(self.modified_delta_y_values[i]**2))))
+            self.delta_b = math.sqrt((1/self.triangle)*sigma_sum(0, len(self.x_values)-1, lambda i: (self.x_values[i]/self.modified_delta_y_values[i])**2))
+
+            self.chi_squared = sigma_sum(0, len(self.x_values)-1, lambda i: ((1/(self.modified_delta_y_values[i]))*((self.y_values[i] - self.final_a_yaxplusb * self.x_values[i] - self.b)))**2)
+            self.reduced_chi_squared = self.chi_squared / self.degrees_of_freedom
+
+        #The formula for calculating P for given reduced-chi-squared is more effort than I want: See RB Eq. 11.6
+
+        # WRITOUT FINAL
+        print(f"{self.modified_delta_y_values=}, \n {self.final_a_yaxplusb=}, {self.b=}, {self.delta_a_yaxplusb=}, {self.delta_b=}, \n {self.chi_squared=}, {self.reduced_chi_squared=}")
+
+    def plot_y_axSQURAEDSSSDSDDplusb(self, p: float=0) -> None: 
+        float(p)
+
         if (p == 0):
             plt.figure(2)
         else:
@@ -354,24 +487,32 @@ def main() -> None:
     data_fitter_plotter.calculate_parameters_yaxplusb()
     data_fitter_plotter.plot_y_axplusb()
 
+    #Need reduced_chi_squared = 0.918 for P=0.50
     data_fitter_plotter.calculate_parameters_yax(p=0.5, manual_delta_y=0.01)
     data_fitter_plotter.plot_y_ax(p=0.5)
 
+    #Need reduced_chi_squared = 0.927 for P=0.50
     data_fitter_plotter.calculate_parameters_yaxplusb(p=0.5, manual_delta_y=0.01)
     data_fitter_plotter.plot_y_axplusb(p=0.5)
 
     data_fitter_plotter.show_plots()
 
-    # # When implemented (optional):
-    # # calculate_parameters_Axsquaredplusbxplusc(0)
-    # # plot...
-    # #
-    # # calculate_parameters_Aoverxplusb(0)
-    # # plot...
-    # #
-    # # calculate_parameters_Aexp_bxplusc_plusD(0)
-    # # plot...
-    # 
+    # data_fitter_plotter.calculate_parameters_yaxSQUAREDplusb()
+    #data_fitter_plotter.plot_y_axSQURAEDSSSDSDDplusb()
+
+    # data_fitter_plotter.calculate_parameters_yaxSQUAREDplusb(p...)
+    #data_fitter_plotter.plot_y_axSQURAEDSSSDSDDplusb(p....)
+
+
+    # When implemented (optional):
+    # calculate_parameters_Axsquaredplusbxplusc(0)
+    # plot...
+    #
+    # calculate_parameters_Aoverxplusb(0)
+    # plot...
+    #
+    # calculate_parameters_Aexp_bxplusc_plusD(0)
+    # plot...
 
 if __name__ == '__main__':
         main()
