@@ -290,13 +290,13 @@ class DataFitterPlotter:
         plt.ylabel(f"{self.y_parameter}")
 
         if (p!=0):
-            plt.title(f"Linear Least-Squares Fit of Diverging Lens (y=ax+b) ensuring P = {p}")
+            plt.title(f"Linear Least-Squares Fit of Measurements (y=ax+b) ensuring P = {p}")
         else:
-            plt.title("Linear Least-Squares Fit of Diverging Lens (y=ax+b)")
+            plt.title("Linear Least-Squares Fit of Measurements (y=ax+b)")
 
         # Add chi-squared summary box
         textstr = '\n'.join((
-            r'$\chi^2 = %.3f$' % (self.chi_squared,),
+            r'$\chi^2 = %.4f$' % (self.chi_squared,),
             r'$\chi^2_\nu = %.4f$' % (self.reduced_chi_squared,),
         ))
         plt.gca().text(
@@ -362,11 +362,10 @@ class DataFitterPlotter:
             if len(self.modified_delta_y_values)==0:
                 for i in range(len(self.delta_y_values)):
                     self.modified_delta_y_values.append(math.sqrt((self.delta_y_values[i])**2 + (self.initial_a_yaxplusb*self.delta_x_values[i])**2))
-                    self.modified_delta_y_values[i] =  self.modified_delta_y_values[i], 6)
+                    self.modified_delta_y_values[i] =  self.modified_delta_y_values[i]
             else:
                 for i in range(len(self.delta_y_values)):
-                    self.modified_delta_y_values[i] = math.sqrt((self.delta_y_values[i])**2 + (self.initial_a_yaxplusb*self.delta_x_values[i])**2)
-                    self.modified_delta_y_values[i] =  self.modified_delta_y_values[i], 6)
+                    self.modified_delta_y_values[i] = math.sqrt((self.delta_y_values[i]))
 
             print("\n\n FITTING y = ax + b (final):\n")
 
@@ -421,7 +420,7 @@ class DataFitterPlotter:
 
         # Add chi-squared summary box
         textstr = '\n'.join((
-            r'$\chi^2 = %.3f$' % (self.chi_squared,),
+            r'$\chi^2 = %.4f$' % (self.chi_squared,),
             r'$\chi^2_\nu = %.4f$' % (self.reduced_chi_squared,),
         ))
         plt.gca().text(
@@ -478,7 +477,7 @@ class DataFitterPlotter:
         pass
 
 def main() -> None:
-    data_fitter_plotter = DataFitterPlotter('sampledata.xlsx', 'Sheet1')
+    data_fitter_plotter = DataFitterPlotter('InterferometryLab2025.xlsx', 'Sheet3')
 
     data_fitter_plotter.calculate_parameters_yax()
     data_fitter_plotter.plot_y_ax()
@@ -487,11 +486,11 @@ def main() -> None:
     data_fitter_plotter.plot_y_axplusb()
 
     #Need reduced_chi_squared = 0.918 for P=0.50
-    data_fitter_plotter.calculate_parameters_yax(p=0.5, manual_delta_y=0.01)
+    data_fitter_plotter.calculate_parameters_yax(p=0.5, manual_delta_y=0.4)
     data_fitter_plotter.plot_y_ax(p=0.5)
 
     #Need reduced_chi_squared = 0.927 for P=0.50
-    data_fitter_plotter.calculate_parameters_yaxplusb(p=0.5, manual_delta_y=0.01)
+    data_fitter_plotter.calculate_parameters_yaxplusb(p=0.5, manual_delta_y=0.45)
     data_fitter_plotter.plot_y_axplusb(p=0.5)
 
     data_fitter_plotter.show_plots()

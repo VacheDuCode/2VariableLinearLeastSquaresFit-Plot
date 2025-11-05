@@ -6,7 +6,7 @@ Effort has been made to make the code as clean as possible, but the job is not d
 Things to be done/refactor:
 1. Breakup big functions into small one-purpose fucntions, one level of abstraction (high, mid, low)
 2. Move variable to close to use (see "Clean Code"-Martin for more)
-3. De-nest some of the if ... for loops
+3. De-nest/breakup some of the if ... for loops
 4. Raise exception if inputs are wrong type
 5. Implement weighted average (a=0, b=...)
 6. Apply lamda function to...? (where appropriate)
