@@ -477,7 +477,7 @@ class DataFitterPlotter:
         pass
 
 def main() -> None:
-    data_fitter_plotter = DataFitterPlotter('InterferometryLab2025.xlsx', 'Sheet3')
+    data_fitter_plotter = DataFitterPlotter('sampledata.xlsx', 'Sheet2')
 
     data_fitter_plotter.calculate_parameters_yax()
     data_fitter_plotter.plot_y_ax()
@@ -485,11 +485,11 @@ def main() -> None:
     data_fitter_plotter.calculate_parameters_yaxplusb()
     data_fitter_plotter.plot_y_axplusb()
 
-    #Need reduced_chi_squared = 0.918 for P=0.50
+    #Need reduced_chi_squared = 0.9xx for P=0.50 for ___ degrees of freedom
     data_fitter_plotter.calculate_parameters_yax(p=0.5, manual_delta_y=0.4)
     data_fitter_plotter.plot_y_ax(p=0.5)
 
-    #Need reduced_chi_squared = 0.927 for P=0.50
+    #Need reduced_chi_squared = 0.9xx for P=0.50 for ___ degrees of freedome
     data_fitter_plotter.calculate_parameters_yaxplusb(p=0.5, manual_delta_y=0.45)
     data_fitter_plotter.plot_y_axplusb(p=0.5)
 
@@ -513,4 +513,4 @@ def main() -> None:
     # plot...
 
 if __name__ == '__main__':
-        main()
+    main()
