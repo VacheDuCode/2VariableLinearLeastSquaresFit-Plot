@@ -244,8 +244,8 @@ class DataFitterPlotter:
 
         # Add chi-squared summary box
         textstr = '\n'.join((
-            r'$\chi^2 = %.3f$' % (self.chi_squared,),
-            r'$\chi^2_\nu = %.3f$' % (self.reduced_chi_squared,)
+            r'$\chi^2 = %.4f$' % (self.chi_squared,),
+            r'$\chi^2_\nu = %.4f$' % (self.reduced_chi_squared,)
         ))
 
         plt.gca().text(
